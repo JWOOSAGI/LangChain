@@ -3,6 +3,9 @@ from langchain.chat_models.openai import ChatOpenAI
 from langchain.schema import HumanMessage, AIMessage, SystemMessage
 import os
 from dotenv import load_dotenv
+import uvicorn
+from app.main_router import router
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
@@ -26,6 +29,8 @@ class Response(BaseModel):
 
 app = FastAPI()
 
+app.include_router(router)
+
 origins = ['*']
 
 app.add_middleware(
@@ -41,13 +46,13 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.post("/chat")
+#@app.post("/chat")
 def chatting(req:Request):
     print('딕셔너리 내용')
     print(req)
     # template = PromptTemplate.from_template("{country}의 수도는 어디야 ?")
     # template.format(country=req.question)
- 
+
     chat = ChatOpenAI(
         openai_api_key=os.environ["api_key"],
         temperature=0.1,               # 창의성 (0.0 ~ 2.0) 
@@ -74,3 +79,6 @@ def chatting(req:Request):
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: str = None):
     return {"item_id": item_id, "q": q}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="localhost", port=8000)
