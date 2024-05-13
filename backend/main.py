@@ -5,11 +5,6 @@ import os
 from dotenv import load_dotenv
 import uvicorn
 from app.main_router import router
-
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-load_dotenv(os.path.join(BASE_DIR, ".env"))
-
 from pydantic import BaseModel
 
 from starlette.middleware.cors import CORSMiddleware
@@ -17,6 +12,12 @@ from langchain.prompts import PromptTemplate, ChatPromptTemplate
 
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+
+
 
 
 
@@ -29,7 +30,7 @@ class Response(BaseModel):
 
 app = FastAPI()
 
-app.include_router(router)
+app.include_router(router, prefix="/api")
 
 origins = ['*']
 

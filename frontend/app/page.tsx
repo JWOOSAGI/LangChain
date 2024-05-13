@@ -19,7 +19,7 @@ export default function Home() {
   } = useForm<Inputs>()
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log('입력된 값 : '+JSON.stringify(data))
-    fetch('http://localhost:8000/titanic', {
+    fetch('http://localhost:8000/api/chat/titanic', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,12 +27,12 @@ export default function Home() {
       body: JSON.stringify(data),
     })
    // .then((response) => console.log('답변: '+JSON.stringify(response)))
-   .then((response) => response.json()) // JSON 형식으로 파싱
-   .then((data) => {
+    .then((response) => response.json()) // JSON 형식으로 파싱
+    .then((data) => {
     console.log(data); // 파싱된 데이터 콘솔 출력
     setResponseData(data); // 데이터 상태 업데이트
   })
-   
+
     .catch((error) => console.log("error:", error));
   }
 
