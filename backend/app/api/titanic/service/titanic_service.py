@@ -1,55 +1,39 @@
-from app.api.titanic.model.titanic_model import TitanicModel
+from dataclasses import dataclass
 import pandas as pd
+from icecream import ic
+
+
+from app.api.titanic.model.titanic_model import TitanicModel
+
 
 class TitanicService:
 
-    model = TitanicModel()
-    
-    def process(self):
-        print(f'프로세스 시작')
-        this = self.model
-        this.train = self.new_model('train.csv')
-        this.test = self.new_model('test.csv')
-        self.df_info(this)
-        
-        this.id = this.test['PassengerId']
-        
-        this = self.drop_feature(this, 'Sibsp', 'Ticket', 'Fare', 'Cabin')
-        
-        self.df_info(this)
-        this = self.create_train(this)
-        
-    @staticmethod
-    def drop_feature(this, *feature) -> object:
-        
-        # for i in feature:
-        #     this.train = this.train.drop([i], axis=1)
-        #     this.test = this.test.drop([i], axis=1)
-            
-        # for i in [this.train, this.test]:
-        #     for j in feature:
-        #         i.drop(j, axis=1, inplace=True)
-                
-            [(i.drop(j, axis=1, inplace=True)) for j in feature for i in [this.train, this.test] if j in i.columns]
-            
-            return this
-        
-    @staticmethod
-    def df_info(this):
-        [print(i.head(3)) for i in [this.train, this.test]]
-        
+    def __init__(self) -> None:
+        self.model = TitanicModel()
 
-    def new_model(self, payload) -> object:
+    def preprocess(self):
+        ic(f'전처리 시작')
+        self.model.preprocess('train.csv', 'test.csv')
+
+
+    def modeling(self):
+        ic(f'모델링 시작')
         this = self.model
-        this.context = './app/api/titanic/data/'
-        this.fname = payload
-        return pd.read_csv(this.context + this.fname)
-    
-    @staticmethod
-    def create_train(this) -> str:
-        return this.train.drop('Survived', axis=1) # 0:행, 1:열
-    
-    @staticmethod
-    def create_label(this) -> str:
-        return this.train['Survived']
-    
+
+    def learning(self):
+        ic(f'학습 시작')
+        ic(f'결정트리를 활용한 검증 정확도: ')
+        ic(f'랜덤프레스트를 활용한 검증 정확도: ')
+        ic(f'나이브베이즈를 활용한 검증 정확도: ')
+        ic(f'KNN를 활용한 검증 정확도: ')
+        ic(f'SVM를 활용한 검증 정확도: ')
+        this = self.model
+
+
+    def postprocessing(self):
+        ic(f'후처리 시작')
+        this = self.model
+
+    def submit(self):
+        ic(f'제출 시작')
+        this = self.model

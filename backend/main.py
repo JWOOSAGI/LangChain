@@ -5,20 +5,14 @@ import os
 from dotenv import load_dotenv
 import uvicorn
 from app.main_router import router
-from pydantic import BaseModel
-
-from starlette.middleware.cors import CORSMiddleware
-from langchain.prompts import PromptTemplate, ChatPromptTemplate
-
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
-
+from icecream import ic
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
+from pydantic import BaseModel
 
-
+from starlette.middleware.cors import CORSMiddleware
 
 
 class Request(BaseModel):
@@ -47,10 +41,9 @@ def read_root():
     return {"Hello": "World"}
 
 
-#@app.post("/chat")
+# @app.post("/chat")
 def chatting(req:Request):
-    print('딕셔너리 내용')
-    print(req)
+    ic(req)
     # template = PromptTemplate.from_template("{country}의 수도는 어디야 ?")
     # template.format(country=req.question)
 
@@ -63,7 +56,7 @@ def chatting(req:Request):
 
 
     # 질의
-    print(f'{chat.predict(req.question)}')
+    ic(f'{chat.predict(req.question)}')
     
 
 
@@ -73,7 +66,6 @@ def chatting(req:Request):
     #     AIMessage(content="서울 입니다.", type="ai"),
     # ]
 
-    # print(chat.predict_messages(message))
 
     return Response(answer=chat.predict(req.question))
 
@@ -81,5 +73,10 @@ def chatting(req:Request):
 def read_item(item_id: int, q: str = None):
     return {"item_id": item_id, "q": q}
 
+
 if __name__ == "__main__":
+    import os
+    import uvicorn
+    os.chdir(os.getcwd() )
+    ic(f'{os.getcwd()}')
     uvicorn.run(app, host="localhost", port=8000)
